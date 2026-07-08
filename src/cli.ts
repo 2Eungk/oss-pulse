@@ -9,6 +9,7 @@ import {
   formatActionSummary,
   formatContributorOnboarding,
   formatJson,
+  formatLaunchPost,
   formatMarkdown,
   formatMarkdownSummary,
   formatReleaseNotes,
@@ -70,7 +71,7 @@ export async function main(argv: readonly string[]): Promise<void> {
     .option("--fail-under <score>", "exit 1 when score is below this threshold")
     .option(
       "-f, --format <format>",
-      "output format: markdown, json, release-notes, action-summary, contributor-onboarding, triage-suggestions, sarif, or github-annotations",
+      "output format: markdown, json, release-notes, action-summary, launch-post, contributor-onboarding, triage-suggestions, sarif, or github-annotations",
       "markdown",
     )
     .option("-o, --output <path>", "write report to a file")
@@ -99,6 +100,8 @@ function formatReport(report: ReturnType<typeof buildReport>, options: ScanOptio
       return formatReleaseNotes(report)
     case "action-summary":
       return formatActionSummary(report)
+    case "launch-post":
+      return formatLaunchPost(report)
     case "contributor-onboarding":
       return formatContributorOnboarding(report)
     case "triage-suggestions":

@@ -75,6 +75,46 @@ export function formatActionSummary(report: PulseReport): string {
   ].join("\n")
 }
 
+export function formatLaunchPost(report: PulseReport): string {
+  const readyChecks = report.checks
+    .filter((check) => check.passed)
+    .slice(0, 6)
+    .map((check) => `- ${escapeText(check.label)}`)
+    .join("\n")
+  const tightening =
+    report.actions.length === 0
+      ? "- Nothing obvious. The repo looks ready to share."
+      : report.actions
+          .slice(0, 3)
+          .map((action) => `- ${escapeText(action.title)} — ${escapeText(action.detail)}`)
+          .join("\n")
+
+  return [
+    "# Launch Post Draft",
+    "",
+    "I vibe-coded a small open source tool and ran `oss-pulse` before sharing the repo.",
+    "",
+    `Readiness score: ${report.score}/100 (${report.status})`,
+    "",
+    "Run it on your repo:",
+    "",
+    "```bash",
+    "npx --yes oss-pulse@0.1.4 scan . --format action-summary",
+    "```",
+    "",
+    "## What looks ready",
+    "",
+    readyChecks || "- No maintainer surfaces are ready yet.",
+    "",
+    "## Still tightening",
+    "",
+    tightening,
+    "",
+    "Feedback welcome from maintainers: what would you check before inviting outside contributors?",
+    "",
+  ].join("\n")
+}
+
 export function formatReleaseNotes(report: PulseReport): string {
   const verifiedChecks = report.checks
     .filter((check) => check.passed)

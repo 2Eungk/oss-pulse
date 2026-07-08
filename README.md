@@ -42,6 +42,7 @@ oss-pulse scan [path] --format markdown
 oss-pulse scan [path] --format json
 oss-pulse scan [path] --format release-notes
 oss-pulse scan [path] --format action-summary
+oss-pulse scan [path] --format launch-post
 oss-pulse scan [path] --format contributor-onboarding
 oss-pulse scan [path] --format triage-suggestions
 oss-pulse scan [path] --format sarif
@@ -59,6 +60,7 @@ Choose the output format by audience:
 | `json` | Stable machine-readable output for dashboards, scripts, or repository automation. |
 | `release-notes` | A first draft of release notes from current readiness signals. |
 | `action-summary` | Compact Markdown for GitHub step summaries with score, status, and the top three actions. |
+| `launch-post` | Paste-ready launch post for vibe-coded projects that need maintainer feedback. |
 | `contributor-onboarding` | A contributor-facing checklist for setup and first contribution paths. |
 | `triage-suggestions` | Maintainer prompts for turning missing surfaces into issues or review tasks. |
 | `sarif` | GitHub code scanning or security dashboard ingestion. |
@@ -106,6 +108,12 @@ Action-focused summary:
 
 ```bash
 npx --yes oss-pulse@0.1.4 scan . --format action-summary
+```
+
+Launch post draft:
+
+```bash
+npx --yes oss-pulse@0.1.4 scan . --format launch-post
 ```
 
 Contributor onboarding report:
@@ -167,7 +175,7 @@ Action inputs:
 | Input | Default | Description |
 | --- | --- | --- |
 | `path` | `.` | Repository path to scan. |
-| `format` | `markdown` | One of `markdown`, `json`, `release-notes`, `action-summary`, `contributor-onboarding`, `triage-suggestions`, `sarif`, or `github-annotations`. |
+| `format` | `markdown` | One of `markdown`, `json`, `release-notes`, `action-summary`, `launch-post`, `contributor-onboarding`, `triage-suggestions`, `sarif`, or `github-annotations`. |
 | `fail-under` | `0` | Exit 1 when the score is below this threshold. |
 | `summary-only` | `false` | Emit compact Markdown with score and next actions. |
 

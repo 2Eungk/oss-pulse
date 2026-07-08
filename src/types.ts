@@ -6,6 +6,7 @@ export const OUTPUT_FORMATS = [
   "markdown",
   "release-notes",
   "action-summary",
+  "launch-post",
   "contributor-onboarding",
   "triage-suggestions",
   "sarif",

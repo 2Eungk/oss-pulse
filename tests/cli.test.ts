@@ -128,7 +128,7 @@ test("CLI returns a concise validation error when the format is unsupported", as
   assert.match(result.stderr, /invalid options/)
   assert.match(
     result.stderr,
-    /format: expected one of json, markdown, release-notes, action-summary, contributor-onboarding, triage-suggestions, sarif, github-annotations/,
+    /format: expected one of json, markdown, release-notes, action-summary, launch-post, contributor-onboarding, triage-suggestions, sarif, github-annotations/,
   )
   assert.doesNotMatch(result.stderr, /invalid_enum_value/)
 })
