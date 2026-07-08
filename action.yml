@@ -11,7 +11,7 @@ inputs:
     required: false
     default: "."
   format:
-    description: Output format. Supported values are markdown, json, release-notes, contributor-onboarding, triage-suggestions, sarif, and github-annotations.
+    description: Output format. Supported values are markdown, json, release-notes, action-summary, contributor-onboarding, triage-suggestions, sarif, and github-annotations.
     required: false
     default: markdown
   fail-under:

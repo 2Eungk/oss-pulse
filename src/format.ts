@@ -50,6 +50,31 @@ export function formatMarkdownSummary(report: PulseReport): string {
   ].join("\n")
 }
 
+export function formatActionSummary(report: PulseReport): string {
+  const actions =
+    report.actions.length === 0
+      ? "No next actions."
+      : report.actions
+          .slice(0, 3)
+          .map(
+            (action, index) =>
+              `${index + 1}. **${escapeText(action.title)}** (${action.priority}) - ${escapeText(action.detail)}`,
+          )
+          .join("\n")
+
+  return [
+    "# OSS Pulse Action Summary",
+    "",
+    `Score: ${report.score}/100`,
+    `Status: ${report.status}`,
+    "",
+    "## Top Actions",
+    "",
+    actions,
+    "",
+  ].join("\n")
+}
+
 export function formatReleaseNotes(report: PulseReport): string {
   const verifiedChecks = report.checks
     .filter((check) => check.passed)

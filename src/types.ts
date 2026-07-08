@@ -5,6 +5,7 @@ export const OUTPUT_FORMATS = [
   "json",
   "markdown",
   "release-notes",
+  "action-summary",
   "contributor-onboarding",
   "triage-suggestions",
   "sarif",

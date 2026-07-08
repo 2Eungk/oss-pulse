@@ -15,7 +15,7 @@ node dist/cli.js scan . --format markdown
 After the package is published:
 
 ```bash
-npx --yes oss-pulse@0.1.3 scan . --format markdown
+npx --yes oss-pulse@0.1.4 scan . --format markdown
 ```
 
 ## CLI
@@ -24,6 +24,7 @@ npx --yes oss-pulse@0.1.3 scan . --format markdown
 oss-pulse scan [path] --format markdown
 oss-pulse scan [path] --format json
 oss-pulse scan [path] --format release-notes
+oss-pulse scan [path] --format action-summary
 oss-pulse scan [path] --format contributor-onboarding
 oss-pulse scan [path] --format triage-suggestions
 oss-pulse scan [path] --format sarif
@@ -40,6 +41,7 @@ Choose the output format by audience:
 | `markdown` | A readable maintainer report for terminals, PR summaries, or `GITHUB_STEP_SUMMARY`. |
 | `json` | Stable machine-readable output for dashboards, scripts, or repository automation. |
 | `release-notes` | A first draft of release notes from current readiness signals. |
+| `action-summary` | Compact Markdown for GitHub step summaries with score, status, and the top three actions. |
 | `contributor-onboarding` | A contributor-facing checklist for setup and first contribution paths. |
 | `triage-suggestions` | Maintainer prompts for turning missing surfaces into issues or review tasks. |
 | `sarif` | GitHub code scanning or security dashboard ingestion. |
@@ -54,6 +56,7 @@ The report includes:
 - JSON Schema for automation consumers at `docs/report.schema.json`
 - Markdown output for GitHub summaries
 - release notes draft output for maintainer updates
+- Action-focused summary output for compact GitHub step summaries
 - contributor onboarding output for first-time contributors
 - triage suggestions for issue queues and pull request review
 - SARIF output for GitHub code scanning and security dashboards
@@ -73,37 +76,43 @@ node dist/cli.js scan . --format markdown --fail-under 80
 Pull request summary gate:
 
 ```bash
-npx --yes oss-pulse@0.1.3 scan . --format markdown --summary-only --fail-under 80 >> "$GITHUB_STEP_SUMMARY"
+npx --yes oss-pulse@0.1.4 scan . --format markdown --summary-only --fail-under 80 >> "$GITHUB_STEP_SUMMARY"
 ```
 
 Release notes draft:
 
 ```bash
-npx --yes oss-pulse@0.1.3 scan . --format release-notes
+npx --yes oss-pulse@0.1.4 scan . --format release-notes
+```
+
+Action-focused summary:
+
+```bash
+npx --yes oss-pulse@0.1.4 scan . --format action-summary
 ```
 
 Contributor onboarding report:
 
 ```bash
-npx --yes oss-pulse@0.1.3 scan . --format contributor-onboarding
+npx --yes oss-pulse@0.1.4 scan . --format contributor-onboarding
 ```
 
 Issue and pull request triage:
 
 ```bash
-npx --yes oss-pulse@0.1.3 scan . --format triage-suggestions
+npx --yes oss-pulse@0.1.4 scan . --format triage-suggestions
 ```
 
 SARIF for code scanning:
 
 ```bash
-npx --yes oss-pulse@0.1.3 scan . --format sarif --output oss-pulse.sarif
+npx --yes oss-pulse@0.1.4 scan . --format sarif --output oss-pulse.sarif
 ```
 
 GitHub workflow annotations:
 
 ```bash
-npx --yes oss-pulse@0.1.3 scan . --format github-annotations
+npx --yes oss-pulse@0.1.4 scan . --format github-annotations
 ```
 
 ## GitHub Actions
@@ -122,13 +131,13 @@ jobs:
       - uses: actions/checkout@v5
         with:
           fetch-depth: 0
-      - run: npx --yes oss-pulse@0.1.3 scan . --format markdown --summary-only --fail-under 80 >> "$GITHUB_STEP_SUMMARY"
+      - run: npx --yes oss-pulse@0.1.4 scan . --format markdown --summary-only --fail-under 80 >> "$GITHUB_STEP_SUMMARY"
 ```
 
 Repository Action usage with a pinned release tag:
 
 ```yaml
-- uses: 2Eungk/oss-pulse@v0.1.3
+- uses: 2Eungk/oss-pulse@v0.1.4
   with:
     path: "."
     format: markdown
@@ -141,7 +150,7 @@ Action inputs:
 | Input | Default | Description |
 | --- | --- | --- |
 | `path` | `.` | Repository path to scan. |
-| `format` | `markdown` | One of `markdown`, `json`, `release-notes`, `contributor-onboarding`, `triage-suggestions`, `sarif`, or `github-annotations`. |
+| `format` | `markdown` | One of `markdown`, `json`, `release-notes`, `action-summary`, `contributor-onboarding`, `triage-suggestions`, `sarif`, or `github-annotations`. |
 | `fail-under` | `0` | Exit 1 when the score is below this threshold. |
 | `summary-only` | `false` | Emit compact Markdown with score and next actions. |
 

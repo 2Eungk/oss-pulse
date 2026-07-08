@@ -6,6 +6,7 @@ import { Command } from "commander"
 import { z } from "zod"
 import { RepositoryPathError, UnexpectedOutputFormatError } from "./errors.js"
 import {
+  formatActionSummary,
   formatContributorOnboarding,
   formatJson,
   formatMarkdown,
@@ -69,7 +70,7 @@ export async function main(argv: readonly string[]): Promise<void> {
     .option("--fail-under <score>", "exit 1 when score is below this threshold")
     .option(
       "-f, --format <format>",
-      "output format: markdown, json, release-notes, contributor-onboarding, triage-suggestions, sarif, or github-annotations",
+      "output format: markdown, json, release-notes, action-summary, contributor-onboarding, triage-suggestions, sarif, or github-annotations",
       "markdown",
     )
     .option("-o, --output <path>", "write report to a file")
@@ -96,6 +97,8 @@ function formatReport(report: ReturnType<typeof buildReport>, options: ScanOptio
       return options.summaryOnly ? formatMarkdownSummary(report) : formatMarkdown(report)
     case "release-notes":
       return formatReleaseNotes(report)
+    case "action-summary":
+      return formatActionSummary(report)
     case "contributor-onboarding":
       return formatContributorOnboarding(report)
     case "triage-suggestions":
