@@ -21,7 +21,7 @@ For GitHub Actions consumers, `oss-pulse scan --format github-annotations` emits
 | `latestCommitIso` | `string \| null` | ISO timestamp for the latest commit, or `null` when unavailable. |
 | `root` | `string` | Absolute path to the scanned git repository root. |
 | `score` | `number` | Integer score from `0` to `100`. |
-| `status` | `"ready" \| "needs-work"` | `ready` only when `score` is `100`. |
+| `status` | `"ready" \| "needs-work"` | `ready` only when every remediation action is cleared. |
 
 ## PulseCheck
 
@@ -47,6 +47,7 @@ For GitHub Actions consumers, `oss-pulse scan --format github-annotations` emits
 | `ci-workflow` | 5 |
 | `release-workflow` | 5 |
 | `changelog` | 5 |
+| `codeowners` | 0 |
 | `funding` | 5 |
 | `external-contributors` | 5 |
 | `code-of-conduct` | 5 |
@@ -73,6 +74,7 @@ For GitHub Actions consumers, `oss-pulse scan --format github-annotations` emits
 - `add-ci-workflow`
 - `add-release-workflow`
 - `add-changelog`
+- `add-codeowners`
 - `add-funding`
 - `invite-contributors`
 - `add-code-of-conduct`

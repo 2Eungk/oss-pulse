@@ -15,7 +15,7 @@ node dist/cli.js scan . --format markdown
 After the package is published:
 
 ```bash
-npx --yes oss-pulse@0.1.2 scan . --format markdown
+npx --yes oss-pulse@0.1.3 scan . --format markdown
 ```
 
 ## CLI
@@ -61,37 +61,37 @@ node dist/cli.js scan . --format markdown --fail-under 80
 Pull request summary gate:
 
 ```bash
-npx --yes oss-pulse@0.1.2 scan . --format markdown --summary-only --fail-under 80 >> "$GITHUB_STEP_SUMMARY"
+npx --yes oss-pulse@0.1.3 scan . --format markdown --summary-only --fail-under 80 >> "$GITHUB_STEP_SUMMARY"
 ```
 
 Release notes draft:
 
 ```bash
-npx --yes oss-pulse@0.1.2 scan . --format release-notes
+npx --yes oss-pulse@0.1.3 scan . --format release-notes
 ```
 
 Contributor onboarding report:
 
 ```bash
-npx --yes oss-pulse@0.1.2 scan . --format contributor-onboarding
+npx --yes oss-pulse@0.1.3 scan . --format contributor-onboarding
 ```
 
 Issue and pull request triage:
 
 ```bash
-npx --yes oss-pulse@0.1.2 scan . --format triage-suggestions
+npx --yes oss-pulse@0.1.3 scan . --format triage-suggestions
 ```
 
 SARIF for code scanning:
 
 ```bash
-npx --yes oss-pulse@0.1.2 scan . --format sarif --output oss-pulse.sarif
+npx --yes oss-pulse@0.1.3 scan . --format sarif --output oss-pulse.sarif
 ```
 
 GitHub workflow annotations:
 
 ```bash
-npx --yes oss-pulse@0.1.2 scan . --format github-annotations
+npx --yes oss-pulse@0.1.3 scan . --format github-annotations
 ```
 
 ## GitHub Actions
@@ -110,7 +110,7 @@ jobs:
       - uses: actions/checkout@v5
         with:
           fetch-depth: 0
-      - run: npx --yes oss-pulse@0.1.2 scan . --format markdown --summary-only --fail-under 80 >> "$GITHUB_STEP_SUMMARY"
+      - run: npx --yes oss-pulse@0.1.3 scan . --format markdown --summary-only --fail-under 80 >> "$GITHUB_STEP_SUMMARY"
 ```
 
 Repository Action usage after publishing:

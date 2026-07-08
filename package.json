@@ -1,6 +1,6 @@
 {
   "name": "oss-pulse",
-  "version": "0.1.2",
+  "version": "0.1.3",
   "description": "A small CLI that turns repository maintenance signals into an actionable OSS health report.",
   "type": "module",
   "license": "MIT",

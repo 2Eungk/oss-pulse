@@ -35,7 +35,36 @@ test("CLI emits JSON pulse when scanning a real git repository", async () => {
   // Then: the observable JSON output contains the computed maintainer score.
   assert.equal(report.score, 35)
   assert.equal(report.status, "needs-work")
-  assert.equal(report.actions.length, 10)
+  assert.equal(report.actions.length, 11)
+})
+
+test("CLI counts CODEOWNERS review-routing signals", async () => {
+  // Given: a real git repository with ownership routing declared.
+  const repositoryRoot = await createMinimalRepository()
+  await mkdir(join(repositoryRoot, ".github"), { recursive: true })
+  await writeFile(join(repositoryRoot, ".github/CODEOWNERS"), "* @maintainer\n", "utf8")
+  await git(repositoryRoot, ["add", "."])
+  await git(repositoryRoot, ["commit", "-m", "Add CODEOWNERS"])
+
+  // When: the compiled CLI scans the repository.
+  const result = await execFileAsync(process.execPath, [
+    cliPath(),
+    "scan",
+    repositoryRoot,
+    "--format",
+    "json",
+  ])
+  const report = JSON.parse(result.stdout)
+
+  // Then: the CODEOWNERS check passes and its remediation action is cleared.
+  assert.equal(
+    report.checks.find((check: { readonly id: string }) => check.id === "codeowners")?.passed,
+    true,
+  )
+  assert.equal(
+    report.actions.some((action: { readonly id: string }) => action.id === "add-codeowners"),
+    false,
+  )
 })
 
 test("CLI counts changelog, funding, and release workflow signals", async () => {

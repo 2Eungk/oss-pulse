@@ -70,6 +70,7 @@ async function gitTopLevel(root: string): Promise<string> {
 async function scanMaintainerFiles(root: string): Promise<MaintainerFiles> {
   const [
     changelog,
+    codeowners,
     codeOfConduct,
     contributing,
     funding,
@@ -83,6 +84,7 @@ async function scanMaintainerFiles(root: string): Promise<MaintainerFiles> {
     workflowCount,
   ] = await Promise.all([
     existsAny(root, ["CHANGELOG.md", "CHANGELOG"]),
+    existsAny(root, ["CODEOWNERS", ".github/CODEOWNERS", "docs/CODEOWNERS"]),
     existsAny(root, ["CODE_OF_CONDUCT.md", ".github/CODE_OF_CONDUCT.md"]),
     existsAny(root, ["CONTRIBUTING.md", ".github/CONTRIBUTING.md"]),
     existsAny(root, [".github/FUNDING.yml", ".github/FUNDING.yaml"]),
@@ -110,6 +112,7 @@ async function scanMaintainerFiles(root: string): Promise<MaintainerFiles> {
 
   return {
     changelog,
+    codeowners,
     codeOfConduct,
     contributing,
     funding,

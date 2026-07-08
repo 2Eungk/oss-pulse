@@ -14,6 +14,7 @@ export type OutputFormat = (typeof OUTPUT_FORMATS)[number]
 
 export type MaintainerFiles = {
   readonly changelog: boolean
+  readonly codeowners: boolean
   readonly codeOfConduct: boolean
   readonly contributing: boolean
   readonly funding: boolean
@@ -47,6 +48,7 @@ export type CheckId =
   | "ci-workflow"
   | "release-workflow"
   | "changelog"
+  | "codeowners"
   | "funding"
   | "external-contributors"
   | "code-of-conduct"
@@ -63,6 +65,7 @@ export type ActionId =
   | "add-ci-workflow"
   | "add-release-workflow"
   | "add-changelog"
+  | "add-codeowners"
   | "add-funding"
   | "invite-contributors"
   | "add-code-of-conduct"

@@ -18,6 +18,7 @@ export function buildReport(signals: RepositorySignals, now: Date = new Date()):
     rule.passed(signals) || rule.action === null ? [] : [rule.action],
   )
   const score = checks.reduce((total, check) => total + check.points, 0)
+  const status = actions.length === 0 ? "ready" : "needs-work"
 
   return {
     actions,
@@ -27,6 +28,6 @@ export function buildReport(signals: RepositorySignals, now: Date = new Date()):
     latestCommitIso: signals.latestCommitIso,
     root: signals.root,
     score,
-    status: score === 100 ? "ready" : "needs-work",
+    status,
   }
 }

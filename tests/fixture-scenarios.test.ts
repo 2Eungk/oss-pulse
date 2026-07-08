@@ -86,6 +86,7 @@ async function createCompleteRepository(): Promise<string> {
   await writeRepoFile(repositoryRoot, "SECURITY.md", "# Security\n")
   await writeRepoFile(repositoryRoot, "CODE_OF_CONDUCT.md", "# Code of Conduct\n")
   await writeRepoFile(repositoryRoot, "CHANGELOG.md", "# Changelog\n")
+  await writeRepoFile(repositoryRoot, ".github/CODEOWNERS", "* @maintainer\n")
   await writeRepoFile(repositoryRoot, ".github/FUNDING.yml", "github: maintainer\n")
   await writeRepoFile(repositoryRoot, ".github/ISSUE_TEMPLATE/bug_report.md", "name: Bug\n")
   await writeRepoFile(

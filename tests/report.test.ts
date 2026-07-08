@@ -10,6 +10,7 @@ const healthySignals: RepositorySignals = {
   contributorsLast90Days: 3,
   files: {
     changelog: true,
+    codeowners: true,
     codeOfConduct: true,
     contributing: true,
     funding: true,
@@ -46,6 +47,7 @@ test("buildReport prioritizes missing maintainer surfaces when repository hygien
     contributorsLast90Days: 1,
     files: {
       changelog: false,
+      codeowners: false,
       codeOfConduct: false,
       contributing: false,
       funding: false,
@@ -77,12 +79,35 @@ test("buildReport prioritizes missing maintainer surfaces when repository hygien
       "add-ci-workflow",
       "add-release-workflow",
       "add-changelog",
+      "add-codeowners",
       "add-funding",
       "invite-contributors",
       "add-code-of-conduct",
     ],
   )
   assert.equal(report.status, "needs-work")
+})
+
+test("buildReport flags missing CODEOWNERS without changing the score budget", () => {
+  // Given: a healthy repository that has not yet declared ownership routing.
+  const signals: RepositorySignals = {
+    ...healthySignals,
+    files: {
+      ...healthySignals.files,
+      codeowners: false,
+    },
+  }
+
+  // When: the report is built.
+  const report = buildReport(signals)
+
+  // Then: maintainers get a CODEOWNERS action while the 100-point score stays stable.
+  assert.equal(report.score, 100)
+  assert.equal(report.status, "needs-work")
+  assert.deepEqual(
+    report.actions.map((action) => action.id),
+    ["add-codeowners"],
+  )
 })
 
 test("formatMarkdown renders score, checks, and next actions for GitHub summaries", () => {

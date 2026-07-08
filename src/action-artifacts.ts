@@ -22,6 +22,8 @@ export function artifactUriForAction(actionId: ActionId): string {
       return ".github/workflows/release.yml"
     case "add-changelog":
       return "CHANGELOG.md"
+    case "add-codeowners":
+      return ".github/CODEOWNERS"
     case "add-funding":
       return ".github/FUNDING.yml"
     case "invite-contributors":

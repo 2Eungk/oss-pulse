@@ -28,6 +28,12 @@ const ACTIONS: Record<ActionId, PulseAction> = {
     priority: "low",
     title: "Add CODE_OF_CONDUCT",
   },
+  "add-codeowners": {
+    detail: "Add CODEOWNERS so review routing is explicit before contributor volume grows.",
+    id: "add-codeowners",
+    priority: "low",
+    title: "Add CODEOWNERS",
+  },
   "add-contributing-guide": {
     detail: "Explain setup, test commands, PR expectations, and good first issue flow.",
     id: "add-contributing-guide",
@@ -189,6 +195,14 @@ export const CHECK_RULES: readonly CheckRule[] = [
     label: "Changelog",
     passed: (signals) => signals.files.changelog,
     points: 5,
+  },
+  {
+    action: ACTIONS["add-codeowners"],
+    detail: (signals) => (signals.files.codeowners ? "CODEOWNERS found" : "CODEOWNERS missing"),
+    id: "codeowners",
+    label: "CODEOWNERS",
+    passed: (signals) => signals.files.codeowners,
+    points: 0,
   },
   {
     action: ACTIONS["add-funding"],
