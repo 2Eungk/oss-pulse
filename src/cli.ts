@@ -1,6 +1,7 @@
 #!/usr/bin/env node
+import { realpathSync } from "node:fs"
 import { writeFile } from "node:fs/promises"
-import { pathToFileURL } from "node:url"
+import { fileURLToPath } from "node:url"
 import { Command } from "commander"
 import { z } from "zod"
 import { RepositoryPathError, UnexpectedOutputFormatError } from "./errors.js"
@@ -114,7 +115,11 @@ function assertNever(value: never): never {
 
 function isCliEntrypoint(argv: readonly string[]): boolean {
   const scriptPath = argv[1]
-  return scriptPath !== undefined && import.meta.url === pathToFileURL(scriptPath).href
+  if (scriptPath === undefined) {
+    return false
+  }
+
+  return realpathSync(fileURLToPath(import.meta.url)) === realpathSync(scriptPath)
 }
 
 if (isCliEntrypoint(process.argv)) {
