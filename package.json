@@ -5,7 +5,7 @@
   "type": "module",
   "license": "MIT",
   "bin": {
-    "oss-pulse": "./dist/cli.js"
+    "oss-pulse": "dist/cli.js"
   },
   "files": [
     "dist",
