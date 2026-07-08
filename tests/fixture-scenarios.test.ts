@@ -61,6 +61,22 @@ test("fixture scenario reports sparse repositories as actionable", async () => {
   )
 })
 
+test("fixture scenario reports docs-ready repositories without workflows as release-blocked", async () => {
+  // Given: a repository with strong documentation and contributor surfaces but no automation.
+  const repositoryRoot = await createDocsReadyRepositoryWithoutWorkflows()
+
+  // When: the CLI scans the fixture as JSON.
+  const report = await scanJson(repositoryRoot)
+
+  // Then: the score preserves the docs credit while CI and release automation stay actionable.
+  assert.equal(report.score, 90)
+  assert.equal(report.status, "needs-work")
+  assert.deepEqual(
+    report.actions.map((action) => action.id),
+    ["add-ci-workflow", "add-release-workflow"],
+  )
+})
+
 test("fixture scenario scans from the repository root for nested package paths", async () => {
   // Given: a nested package path inside a repository fixture.
   const repositoryRoot = await createSparseRepository()
@@ -98,6 +114,32 @@ async function createCompleteRepository(): Promise<string> {
   await writeRepoFile(repositoryRoot, ".github/workflows/ci.yml", "name: CI\n")
   await writeRepoFile(repositoryRoot, ".github/workflows/release.yml", "name: Release\n")
   await commitAll(repositoryRoot, "Add maintainer surfaces", MAINTAINER)
+
+  await writeRepoFile(repositoryRoot, "docs/contributor-note.md", "Thanks\n")
+  await commitAll(repositoryRoot, "Add contributor note", CONTRIBUTOR)
+
+  return repositoryRoot
+}
+
+async function createDocsReadyRepositoryWithoutWorkflows(): Promise<string> {
+  const repositoryRoot = await createRepository()
+
+  await writeRepoFile(repositoryRoot, "README.md", "# Docs Ready\n")
+  await writeRepoFile(repositoryRoot, "LICENSE", "MIT\n")
+  await writeRepoFile(repositoryRoot, "CONTRIBUTING.md", "# Contributing\n")
+  await writeRepoFile(repositoryRoot, "SECURITY.md", "# Security\n")
+  await writeRepoFile(repositoryRoot, "CODE_OF_CONDUCT.md", "# Code of Conduct\n")
+  await writeRepoFile(repositoryRoot, "CHANGELOG.md", "# Changelog\n")
+  await writeRepoFile(repositoryRoot, ".github/CODEOWNERS", "* @maintainer\n")
+  await writeRepoFile(repositoryRoot, ".github/FUNDING.yml", "github: maintainer\n")
+  await writeRepoFile(repositoryRoot, ".github/ISSUE_TEMPLATE/bug_report.md", "name: Bug\n")
+  await writeRepoFile(
+    repositoryRoot,
+    ".github/ISSUE_TEMPLATE/good_first_issue.md",
+    "name: Good first issue\nlabels: good first issue\n",
+  )
+  await writeRepoFile(repositoryRoot, ".github/PULL_REQUEST_TEMPLATE.md", "## Summary\n")
+  await commitAll(repositoryRoot, "Add docs-ready surfaces", MAINTAINER)
 
   await writeRepoFile(repositoryRoot, "docs/contributor-note.md", "Thanks\n")
   await commitAll(repositoryRoot, "Add contributor note", CONTRIBUTOR)
