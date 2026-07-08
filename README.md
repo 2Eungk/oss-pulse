@@ -1,21 +1,38 @@
 # oss-pulse
 
-`oss-pulse` turns local repository maintenance signals into a small health report that works in a terminal, CI job, or GitHub step summary.
+You vibe-coded a repo. Before you drop the GitHub link, run one command:
 
-The first release is intentionally narrow: it checks whether a repository has the surfaces that help outside contributors succeed.
+```bash
+npx --yes oss-pulse@0.1.4 scan . --format action-summary
+```
 
-## Install
+`oss-pulse` checks whether your project looks ready for real outside contributors: license, contributing guide, issue templates, security policy, CI, changelog, release workflow, and clear next actions.
+
+It is not a giant code-quality scanner. It is a small preflight check for the awkward moment after “it works on my machine” and before “please star my repo.”
+
+```txt
+# OSS Pulse Action Summary
+
+Score: 95/100
+Status: needs-work
+
+## Top Actions
+
+1. **Grow external contributors** (medium) - Create starter issues and invite external contributors into small, reviewable work.
+```
+
+## Quick start
+
+```bash
+npx --yes oss-pulse@0.1.4 scan . --format markdown
+```
+
+Local development:
 
 ```bash
 npm install
 npm run build
 node dist/cli.js scan . --format markdown
-```
-
-After the package is published:
-
-```bash
-npx --yes oss-pulse@0.1.4 scan . --format markdown
 ```
 
 ## CLI
@@ -160,13 +177,15 @@ When `format` is `github-annotations`, the Action prints workflow commands to st
 
 ## Why
 
-Most maintainer tools wait until a project is already busy. `oss-pulse` starts earlier: it makes missing contribution paths visible before a community arrives.
+A lot of small OSS launches fail in the same boring way: the code is there, but a stranger cannot tell how to help.
 
-This project is built for maintainers who want a practical route toward a healthier open source project and measurable public contribution history.
+`oss-pulse` checks that boring layer before you promote the repo. It nudges you toward the files and workflows people expect when they open a first PR: license, contribution path, issue templates, security contact, CI, changelog, release workflow, and starter issues.
+
+Use it when you just turned a vibe-coded prototype into a public project and want the repo to feel maintained, not abandoned five minutes after launch.
 
 ## Roadmap
 
-See [ROADMAP.md](docs/ROADMAP.md) for the product path and [CONTRIBUTOR_BACKLOG.md](docs/CONTRIBUTOR_BACKLOG.md) for issues designed for first-time contributors.
+See [ROADMAP.md](docs/ROADMAP.md) for the product path, [CONTRIBUTOR_BACKLOG.md](docs/CONTRIBUTOR_BACKLOG.md) for issues designed for first-time contributors, and [VIBE_CODER_LAUNCH_COPY.md](docs/VIBE_CODER_LAUNCH_COPY.md) for launch copy.
 
 For automation consumers, see [REPORT_SCHEMA.md](docs/REPORT_SCHEMA.md). For real repository examples, see [docs/examples](docs/examples/README.md).
 
