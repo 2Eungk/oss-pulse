@@ -125,10 +125,10 @@ jobs:
       - run: npx --yes oss-pulse@0.1.3 scan . --format markdown --summary-only --fail-under 80 >> "$GITHUB_STEP_SUMMARY"
 ```
 
-Repository Action usage after publishing:
+Repository Action usage with a pinned release tag:
 
 ```yaml
-- uses: your-org/oss-pulse@v0.1.0
+- uses: 2Eungk/oss-pulse@v0.1.3
   with:
     path: "."
     format: markdown
@@ -145,7 +145,7 @@ Action inputs:
 | `fail-under` | `0` | Exit 1 when the score is below this threshold. |
 | `summary-only` | `false` | Emit compact Markdown with score and next actions. |
 
-After publishing the GitHub repository, prefer a pinned release tag for the repository Action instead of a branch name.
+Prefer a pinned release tag for the repository Action instead of a branch name.
 
 When `format` is `github-annotations`, the Action prints workflow commands to stdout so GitHub can render annotations in the checks UI.
 

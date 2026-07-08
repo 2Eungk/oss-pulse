@@ -31,6 +31,7 @@ The temporary clone received:
 
 - LICENSE, CONTRIBUTING, SECURITY, CODE_OF_CONDUCT, CHANGELOG
 - issue, good first issue, and pull request templates
+- CODEOWNERS review routing
 - CI and release workflows
 - funding metadata
 - two recent commits from two authors

@@ -1,6 +1,10 @@
 name: OSS Pulse
 description: Turn repository maintenance signals into an actionable OSS health report.
 
+branding:
+  icon: activity
+  color: purple
+
 inputs:
   path:
     description: Repository path to scan.

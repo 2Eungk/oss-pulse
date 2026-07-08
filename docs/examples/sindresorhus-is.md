@@ -32,9 +32,10 @@ First recommended actions:
 
 The temporary clone received:
 
-- CONTRIBUTING, CODE_OF_CONDUCT, CHANGELOG
+- LICENSE, CONTRIBUTING, SECURITY, CODE_OF_CONDUCT, CHANGELOG
 - issue, good first issue, and pull request templates
-- release workflow
+- CODEOWNERS review routing
+- CI and release workflows
 - funding metadata
 - two recent commits from two authors
 
