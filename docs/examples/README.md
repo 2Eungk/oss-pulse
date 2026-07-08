@@ -10,3 +10,4 @@ Generated on 2026-07-08.
 
 - [octocat/Hello-World](octocat-hello-world.md)
 - [sindresorhus/is](sindresorhus-is.md)
+- [chalk/chalk](chalk-chalk.md)
