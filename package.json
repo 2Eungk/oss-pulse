@@ -1,0 +1,40 @@
+{
+  "name": "oss-pulse",
+  "version": "0.1.0",
+  "description": "A small CLI that turns repository maintenance signals into an actionable OSS health report.",
+  "type": "module",
+  "license": "MIT",
+  "bin": {
+    "oss-pulse": "./dist/cli.js"
+  },
+  "files": [
+    "dist",
+    "docs",
+    "README.md",
+    "CHANGELOG.md",
+    "CONTRIBUTING.md",
+    "CODE_OF_CONDUCT.md",
+    "SECURITY.md",
+    "LICENSE",
+    "action.yml"
+  ],
+  "scripts": {
+    "build": "tsc -p tsconfig.build.json",
+    "check": "npm run lint && npm run typecheck && npm test",
+    "lint": "biome check .",
+    "test": "rm -rf .tmp/test-dist && tsc -p tsconfig.test.json && node --test .tmp/test-dist/tests/*.test.js",
+    "typecheck": "tsc --noEmit -p tsconfig.json"
+  },
+  "dependencies": {
+    "commander": "^12.1.0",
+    "zod": "^3.23.8"
+  },
+  "devDependencies": {
+    "@biomejs/biome": "^1.9.4",
+    "@types/node": "^22.10.1",
+    "typescript": "^5.7.2"
+  },
+  "engines": {
+    "node": ">=20.0.0"
+  }
+}

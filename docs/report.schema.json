@@ -1,0 +1,136 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://oss-pulse.dev/schemas/report.schema.json",
+  "title": "OSS Pulse Report",
+  "description": "Machine-readable schema for `oss-pulse scan --format json` output.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "actions",
+    "branch",
+    "checks",
+    "generatedAtIso",
+    "latestCommitIso",
+    "root",
+    "score",
+    "status"
+  ],
+  "properties": {
+    "actions": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/PulseAction" }
+    },
+    "branch": {
+      "type": "string",
+      "minLength": 1
+    },
+    "checks": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/PulseCheck" }
+    },
+    "generatedAtIso": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "latestCommitIso": {
+      "anyOf": [{ "type": "string", "format": "date-time" }, { "type": "null" }]
+    },
+    "root": {
+      "type": "string",
+      "minLength": 1
+    },
+    "score": {
+      "type": "integer",
+      "minimum": 0,
+      "maximum": 100
+    },
+    "status": { "$ref": "#/$defs/ReportStatus" }
+  },
+  "$defs": {
+    "ActionId": {
+      "type": "string",
+      "enum": [
+        "add-readme",
+        "add-license",
+        "add-contributing-guide",
+        "add-issue-template",
+        "add-good-first-issue-template",
+        "add-pull-request-template",
+        "add-security-policy",
+        "add-ci-workflow",
+        "add-release-workflow",
+        "add-changelog",
+        "add-funding",
+        "invite-contributors",
+        "add-code-of-conduct",
+        "resume-maintenance"
+      ]
+    },
+    "CheckId": {
+      "type": "string",
+      "enum": [
+        "readme",
+        "license",
+        "contributing",
+        "issue-template",
+        "good-first-issue-template",
+        "pull-request-template",
+        "security",
+        "ci-workflow",
+        "release-workflow",
+        "changelog",
+        "funding",
+        "external-contributors",
+        "code-of-conduct",
+        "recent-activity"
+      ]
+    },
+    "PulseAction": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["detail", "id", "priority", "title"],
+      "properties": {
+        "detail": {
+          "type": "string",
+          "minLength": 1
+        },
+        "id": { "$ref": "#/$defs/ActionId" },
+        "priority": { "$ref": "#/$defs/Priority" },
+        "title": {
+          "type": "string",
+          "minLength": 1
+        }
+      }
+    },
+    "PulseCheck": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["detail", "id", "label", "passed", "points"],
+      "properties": {
+        "detail": {
+          "type": "string",
+          "minLength": 1
+        },
+        "id": { "$ref": "#/$defs/CheckId" },
+        "label": {
+          "type": "string",
+          "minLength": 1
+        },
+        "passed": { "type": "boolean" },
+        "points": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 15
+        }
+      }
+    },
+    "Priority": {
+      "type": "string",
+      "enum": ["high", "medium", "low"]
+    },
+    "ReportStatus": {
+      "type": "string",
+      "enum": ["ready", "needs-work"]
+    }
+  }
+}

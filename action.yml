@@ -1,0 +1,45 @@
+name: OSS Pulse
+description: Turn repository maintenance signals into an actionable OSS health report.
+
+inputs:
+  path:
+    description: Repository path to scan.
+    required: false
+    default: "."
+  format:
+    description: Output format. Supported values are markdown, json, release-notes, contributor-onboarding, triage-suggestions, sarif, and github-annotations.
+    required: false
+    default: markdown
+  fail-under:
+    description: Exit 1 when the repository score is below this threshold.
+    required: false
+    default: "0"
+  summary-only:
+    description: Emit compact Markdown with score and next actions.
+    required: false
+    default: "false"
+
+runs:
+  using: composite
+  steps:
+    - shell: bash
+      run: npm ci && npm run build
+      working-directory: ${{ github.action_path }}
+    - shell: bash
+      run: |
+        args=(scan --format="$OSS_PULSE_FORMAT" --fail-under="$OSS_PULSE_FAIL_UNDER")
+        if [ "$OSS_PULSE_SUMMARY_ONLY" = "true" ]; then
+          args+=(--summary-only)
+        fi
+        args+=(-- "$OSS_PULSE_PATH")
+        if [ "$OSS_PULSE_FORMAT" = "github-annotations" ]; then
+          node "$OSS_PULSE_ACTION_PATH/dist/cli.js" "${args[@]}"
+        else
+          node "$OSS_PULSE_ACTION_PATH/dist/cli.js" "${args[@]}" >> "$GITHUB_STEP_SUMMARY"
+        fi
+      env:
+        OSS_PULSE_ACTION_PATH: ${{ github.action_path }}
+        OSS_PULSE_FAIL_UNDER: ${{ inputs.fail-under }}
+        OSS_PULSE_FORMAT: ${{ inputs.format }}
+        OSS_PULSE_PATH: ${{ inputs.path }}
+        OSS_PULSE_SUMMARY_ONLY: ${{ inputs.summary-only }}
