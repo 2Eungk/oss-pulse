@@ -107,7 +107,7 @@ jobs:
   pulse:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
         with:
           fetch-depth: 0
       - run: npx --yes oss-pulse@0.1.0 scan . --format markdown --summary-only --fail-under 80 >> "$GITHUB_STEP_SUMMARY"
