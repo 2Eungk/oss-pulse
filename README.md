@@ -33,6 +33,18 @@ oss-pulse scan [path] --format markdown --fail-under 80
 oss-pulse scan [path] --format markdown --summary-only
 ```
 
+Choose the output format by audience:
+
+| Format | Use it when you need |
+| --- | --- |
+| `markdown` | A readable maintainer report for terminals, PR summaries, or `GITHUB_STEP_SUMMARY`. |
+| `json` | Stable machine-readable output for dashboards, scripts, or repository automation. |
+| `release-notes` | A first draft of release notes from current readiness signals. |
+| `contributor-onboarding` | A contributor-facing checklist for setup and first contribution paths. |
+| `triage-suggestions` | Maintainer prompts for turning missing surfaces into issues or review tasks. |
+| `sarif` | GitHub code scanning or security dashboard ingestion. |
+| `github-annotations` | CI annotations that surface high/medium/low remediation actions directly in checks. |
+
 The report includes:
 
 - maintainer readiness score
