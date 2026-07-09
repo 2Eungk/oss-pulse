@@ -2,7 +2,10 @@
 
 ## Unreleased
 
+## 0.1.5 - 2026-07-09
+
 - Added `--format launch-post` for paste-ready vibe-coder launch posts.
+- Sharpened README and launch-copy docs around the vibe-coder preflight use case.
 
 ## 0.1.0 - 2026-07-08
 

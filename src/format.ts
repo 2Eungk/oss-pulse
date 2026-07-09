@@ -99,7 +99,7 @@ export function formatLaunchPost(report: PulseReport): string {
     "Run it on your repo:",
     "",
     "```bash",
-    "npx --yes oss-pulse@0.1.4 scan . --format action-summary",
+    "npx --yes oss-pulse@latest scan . --format launch-post",
     "```",
     "",
     "## What looks ready",

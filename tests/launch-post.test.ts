@@ -29,7 +29,7 @@ test("CLI emits a vibe-coder launch post with command and next actions", async (
     /I vibe-coded a small open source tool and ran `oss-pulse` before sharing the repo\./,
   )
   assert.match(result.stdout, /Readiness score: 95\/100 \(needs-work\)/)
-  assert.match(result.stdout, /npx --yes oss-pulse@0\.1\.4 scan \. --format action-summary/)
+  assert.match(result.stdout, /npx --yes oss-pulse@latest scan \. --format launch-post/)
   assert.match(result.stdout, /## What looks ready/)
   assert.match(result.stdout, /- README/)
   assert.match(result.stdout, /- License/)
