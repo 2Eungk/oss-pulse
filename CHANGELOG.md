@@ -4,6 +4,10 @@
 
 - Fixed CLI and SARIF version reporting so both read from `package.json` instead of stale hardcoded values.
 - Updated paste-ready README and launch-copy examples to use `oss-pulse@latest`.
+- Ranked remediation actions by priority while preserving rule order within each priority.
+- Rejected configuration-only issue-template directories and added controlled output-file errors.
+- Renamed contributor activity copy so distinct git authors are not misreported as verified external contributors.
+- Fixed the composite Action example to check out the target repository and pin an existing release tag.
 
 ## 0.1.5 - 2026-07-09
 

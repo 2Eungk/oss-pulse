@@ -32,7 +32,7 @@ Latest commit: 2026-01-27T13:30:36+07:00
 4. Add release workflow
 5. Add CHANGELOG
 6. Add CODEOWNERS
-7. Grow external contributors
+7. Grow contributor activity
 8. Add CODE_OF_CONDUCT
 
 ## Why This Example Helps

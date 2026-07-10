@@ -20,7 +20,23 @@ test("GitHub Action metadata documents supported formats and safe path forwardin
   assert.match(metadata, /node "\$OSS_PULSE_ACTION_PATH\/dist\/cli\.js" "\$\{args\[@\]\}"/)
 })
 
+test("README Action example checks out the target repository and pins an existing release", async () => {
+  const readme = await readFile(resolve(projectRoot(), "README.md"), "utf8")
+  const actionExample = readme.slice(
+    readme.indexOf("Repository Action usage"),
+    readme.indexOf("Action inputs:"),
+  )
+
+  assert.match(actionExample, /uses: actions\/checkout@v5/)
+  assert.match(actionExample, /fetch-depth: 0/)
+  assert.match(actionExample, /uses: 2Eungk\/oss-pulse@v0\.1\.4/)
+})
+
 function actionPath(): string {
+  return resolve(projectRoot(), "action.yml")
+}
+
+function projectRoot(): string {
   const currentFile = fileURLToPath(import.meta.url)
-  return resolve(dirname(currentFile), "../../../action.yml")
+  return resolve(dirname(currentFile), "../../..")
 }

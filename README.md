@@ -18,7 +18,7 @@ Status: needs-work
 
 ## Top Actions
 
-1. **Grow external contributors** (medium) - Create starter issues and invite external contributors into small, reviewable work.
+1. **Grow contributor activity** (medium) - Create starter issues and invite more contributors into small, reviewable work.
 ```
 
 ## Quick start
@@ -159,10 +159,13 @@ jobs:
       - run: npx --yes oss-pulse@latest scan . --format markdown --summary-only --fail-under 80 >> "$GITHUB_STEP_SUMMARY"
 ```
 
-Repository Action usage with a pinned release tag:
+Repository Action usage with a pinned release tag (checkout is required before scanning):
 
 ```yaml
-- uses: 2Eungk/oss-pulse@v0.1.5
+- uses: actions/checkout@v5
+  with:
+    fetch-depth: 0
+- uses: 2Eungk/oss-pulse@v0.1.4
   with:
     path: "."
     format: markdown

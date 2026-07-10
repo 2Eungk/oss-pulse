@@ -77,6 +77,27 @@ test("fixture scenario reports docs-ready repositories without workflows as rele
   )
 })
 
+test("fixture scenario rejects configuration-only issue template directories", async () => {
+  // Given: GitHub issue-template configuration exists without an actual issue template.
+  const repositoryRoot = await createSparseRepository()
+  await writeRepoFile(
+    repositoryRoot,
+    ".github/ISSUE_TEMPLATE/config.yml",
+    "blank_issues_enabled: false\n",
+  )
+  await commitAll(repositoryRoot, "Configure issue chooser", MAINTAINER)
+
+  // When: the repository is scanned.
+  const report = await scanJson(repositoryRoot)
+
+  // Then: configuration alone does not earn issue-template readiness credit.
+  assert.equal(report.score, 15)
+  assert.equal(
+    report.actions.some((action) => action.id === "add-issue-template"),
+    true,
+  )
+})
+
 test("fixture scenario scans from the repository root for nested package paths", async () => {
   // Given: a nested package path inside a repository fixture.
   const repositoryRoot = await createSparseRepository()

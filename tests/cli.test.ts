@@ -145,6 +145,20 @@ test("CLI returns a concise validation error when the format is unsupported", as
   assert.doesNotMatch(result.stderr, /invalid_enum_value/)
 })
 
+test("CLI returns a concise error when the output file cannot be written", async () => {
+  // Given: a valid repository and an output path whose parent does not exist.
+  const repositoryRoot = await createMinimalRepository()
+  const outputPath = join(repositoryRoot, "missing-parent/report.md")
+
+  // When: the CLI tries to write the report.
+  const result = await captureFailure([cliPath(), "scan", repositoryRoot, "--output", outputPath])
+
+  // Then: it reports a controlled command error without exposing a Node stack trace.
+  assert.equal(result.code, 2)
+  assert.match(result.stderr, /cannot write report/)
+  assert.doesNotMatch(result.stderr, /node:internal|at async|ENOENT.*open/)
+})
+
 test("CLI scans from the git top-level when invoked inside a repository subdirectory", async () => {
   // Given: a repository whose maintainer files live at the git root.
   const repositoryRoot = await createMinimalRepository()

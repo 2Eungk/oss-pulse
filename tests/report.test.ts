@@ -73,19 +73,27 @@ test("buildReport prioritizes missing maintainer surfaces when repository hygien
       "add-license",
       "add-contributing-guide",
       "add-issue-template",
-      "add-good-first-issue-template",
       "add-pull-request-template",
       "add-security-policy",
+      "add-good-first-issue-template",
       "add-ci-workflow",
       "add-release-workflow",
       "add-changelog",
+      "invite-contributors",
       "add-codeowners",
       "add-funding",
-      "invite-contributors",
       "add-code-of-conduct",
     ],
   )
   assert.equal(report.status, "needs-work")
+  assert.equal(
+    report.checks.find((check) => check.id === "external-contributors")?.label,
+    "Distinct contributor activity",
+  )
+  assert.equal(
+    report.actions.find((action) => action.id === "invite-contributors")?.title,
+    "Grow contributor activity",
+  )
 })
 
 test("buildReport flags missing CODEOWNERS without changing the score budget", () => {

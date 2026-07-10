@@ -4,7 +4,7 @@ import { writeFile } from "node:fs/promises"
 import { fileURLToPath } from "node:url"
 import { Command } from "commander"
 import { z } from "zod"
-import { RepositoryPathError, UnexpectedOutputFormatError } from "./errors.js"
+import { ReportWriteError, RepositoryPathError, UnexpectedOutputFormatError } from "./errors.js"
 import {
   formatActionSummary,
   formatContributorOnboarding,
@@ -48,7 +48,11 @@ async function runScanWithOptions(targetPath: string, options: ScanOptions): Pro
   const output = formatReport(report, options)
 
   if (options.output !== undefined) {
-    await writeFile(options.output, output, "utf8")
+    try {
+      await writeFile(options.output, output, "utf8")
+    } catch {
+      throw new ReportWriteError(options.output)
+    }
   }
 
   return {
@@ -134,7 +138,7 @@ if (isCliEntrypoint(process.argv)) {
 }
 
 function handleCliFailure(error: unknown): void {
-  if (error instanceof RepositoryPathError) {
+  if (error instanceof RepositoryPathError || error instanceof ReportWriteError) {
     process.stderr.write(`${error.message}\n`)
     process.exitCode = 2
     return

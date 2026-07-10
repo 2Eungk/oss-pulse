@@ -16,7 +16,7 @@ export function buildReport(signals: RepositorySignals, now: Date = new Date()):
 
   const actions = CHECK_RULES.flatMap((rule): readonly PulseAction[] =>
     rule.passed(signals) || rule.action === null ? [] : [rule.action],
-  )
+  ).sort((left, right) => actionPriorityRank(left.priority) - actionPriorityRank(right.priority))
   const score = checks.reduce((total, check) => total + check.points, 0)
   const status = actions.length === 0 ? "ready" : "needs-work"
 
@@ -30,4 +30,21 @@ export function buildReport(signals: RepositorySignals, now: Date = new Date()):
     score,
     status,
   }
+}
+
+function actionPriorityRank(priority: PulseAction["priority"]): number {
+  switch (priority) {
+    case "high":
+      return 0
+    case "medium":
+      return 1
+    case "low":
+      return 2
+    default:
+      return assertNever(priority)
+  }
+}
+
+function assertNever(value: never): never {
+  throw new Error(`unexpected action priority: ${value}`)
 }

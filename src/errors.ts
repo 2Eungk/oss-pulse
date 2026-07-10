@@ -21,6 +21,14 @@ export class GitCommandError extends Error {
   }
 }
 
+export class ReportWriteError extends Error {
+  readonly name = "ReportWriteError"
+
+  constructor(readonly path: string) {
+    super(`cannot write report to ${path}`)
+  }
+}
+
 export class UnexpectedOutputFormatError extends Error {
   readonly name = "UnexpectedOutputFormatError"
 

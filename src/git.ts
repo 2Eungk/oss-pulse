@@ -96,7 +96,7 @@ async function scanMaintainerFiles(root: string): Promise<MaintainerFiles> {
       ".github/ISSUE_TEMPLATE/good-first-issue.yml",
       ".github/ISSUE_TEMPLATE/good-first-issue.yaml",
     ]),
-    existsAny(root, [".github/ISSUE_TEMPLATE.md", ".github/ISSUE_TEMPLATE"]),
+    hasIssueTemplate(root),
     existsAny(root, ["LICENSE", "LICENSE.md"]),
     existsAny(root, [".github/PULL_REQUEST_TEMPLATE.md", ".github/pull_request_template.md"]),
     existsAny(root, ["README.md", "README"]),
@@ -124,6 +124,37 @@ async function scanMaintainerFiles(root: string): Promise<MaintainerFiles> {
     releaseWorkflow,
     security,
     workflowCount,
+  }
+}
+
+async function hasIssueTemplate(root: string): Promise<boolean> {
+  if (await existsAny(root, [".github/ISSUE_TEMPLATE.md"])) {
+    return true
+  }
+
+  const templatesRoot = resolve(root, ".github/ISSUE_TEMPLATE")
+
+  try {
+    const entries = await readdir(templatesRoot, { withFileTypes: true })
+    return entries.some((entry) => {
+      if (!entry.isFile()) {
+        return false
+      }
+
+      const normalizedName = entry.name.toLowerCase()
+      return (
+        normalizedName !== "config.yml" &&
+        normalizedName !== "config.yaml" &&
+        (normalizedName.endsWith(".md") ||
+          normalizedName.endsWith(".yml") ||
+          normalizedName.endsWith(".yaml"))
+      )
+    })
+  } catch (error) {
+    if (error instanceof Error && "code" in error && error.code === "ENOENT") {
+      return false
+    }
+    throw error
   }
 }
 

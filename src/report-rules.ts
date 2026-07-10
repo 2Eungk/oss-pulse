@@ -89,10 +89,10 @@ const ACTIONS: Record<ActionId, PulseAction> = {
     title: "Add SECURITY policy",
   },
   "invite-contributors": {
-    detail: "Create starter issues and invite external contributors into small, reviewable work.",
+    detail: "Create starter issues and invite more contributors into small, reviewable work.",
     id: "invite-contributors",
     priority: "medium",
-    title: "Grow external contributors",
+    title: "Grow contributor activity",
   },
   "resume-maintenance": {
     detail: "Land a small maintenance commit so visitors can see active stewardship.",
@@ -216,7 +216,7 @@ export const CHECK_RULES: readonly CheckRule[] = [
     action: ACTIONS["invite-contributors"],
     detail: (signals) => `${signals.contributorsLast90Days} contributor(s) in the last 90 days`,
     id: "external-contributors",
-    label: "Contributor activity",
+    label: "Distinct contributor activity",
     passed: (signals) => signals.contributorsLast90Days >= 2,
     points: 5,
   },

@@ -34,7 +34,7 @@ test("CLI emits a vibe-coder launch post with command and next actions", async (
   assert.match(result.stdout, /- README/)
   assert.match(result.stdout, /- License/)
   assert.match(result.stdout, /## Still tightening/)
-  assert.match(result.stdout, /Grow external contributors/)
+  assert.match(result.stdout, /Grow contributor activity/)
   assert.match(result.stdout, /Feedback welcome from maintainers/)
   assert.doesNotMatch(result.stdout, /## Checks/)
   assert.equal(result.stderr, "")
