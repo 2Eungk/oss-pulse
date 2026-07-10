@@ -1,6 +1,6 @@
 import { strict as assert } from "node:assert"
 import { execFile } from "node:child_process"
-import { mkdtemp, writeFile } from "node:fs/promises"
+import { mkdtemp, readFile, writeFile } from "node:fs/promises"
 import { tmpdir } from "node:os"
 import { dirname, join, resolve } from "node:path"
 import { test } from "node:test"
@@ -32,6 +32,7 @@ const SarifSchema = z.object({
         driver: z.object({
           name: z.literal("oss-pulse"),
           rules: z.array(z.object({ id: z.string() })),
+          semanticVersion: z.string().min(1),
         }),
       }),
     }),
@@ -56,6 +57,8 @@ test("CLI emits SARIF when sarif format is selected", async () => {
   assert.ok(run)
 
   // Then: missing high-priority actions become code scanning results.
+  const packageJson = JSON.parse(await readFile(resolve(projectRoot(), "package.json"), "utf8"))
+  assert.equal(run.tool.driver.semanticVersion, packageJson.version)
   assert.equal(run.results[0]?.ruleId, "add-license")
   assert.equal(run.results[0]?.level, "error")
   assert.equal(run.results[0]?.locations[0]?.physicalLocation.artifactLocation.uri, "LICENSE")
@@ -84,4 +87,9 @@ async function git(cwd: string, args: readonly string[]): Promise<void> {
 function cliPath(): string {
   const currentFile = fileURLToPath(import.meta.url)
   return resolve(dirname(currentFile), "../src/cli.js")
+}
+
+function projectRoot(): string {
+  const currentFile = fileURLToPath(import.meta.url)
+  return resolve(dirname(currentFile), "../../..")
 }

@@ -2,6 +2,9 @@
 
 ## Unreleased
 
+- Fixed CLI and SARIF version reporting so both read from `package.json` instead of stale hardcoded values.
+- Updated paste-ready README and launch-copy examples to use `oss-pulse@latest`.
+
 ## 0.1.5 - 2026-07-09
 
 - Added `--format launch-post` for paste-ready vibe-coder launch posts.

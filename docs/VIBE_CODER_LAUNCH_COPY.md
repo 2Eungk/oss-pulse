@@ -16,7 +16,7 @@ I built oss-pulse for the moment after a vibe-coded project works locally and be
 It checks whether the repo is ready for outside contributors:
 README, license, contributing guide, issue templates, security policy, CI, changelog, release workflow, and next actions.
 
-npx --yes oss-pulse@0.1.4 scan . --format launch-post
+npx --yes oss-pulse@latest scan . --format launch-post
 
 https://github.com/2Eungk/oss-pulse
 ```
@@ -28,7 +28,7 @@ Vibe-coded a repo and about to post it?
 
 Run this first:
 
-npx --yes oss-pulse@0.1.4 scan . --format launch-post
+npx --yes oss-pulse@latest scan . --format launch-post
 
 oss-pulse checks the boring OSS surfaces people expect before opening a PR: license, contributing guide, issue templates, security policy, CI, changelog, and release workflow.
 
@@ -52,7 +52,7 @@ LICENSE 넣었나? CONTRIBUTING 있나? 이슈 템플릿은? SECURITY.md는? CI�
 
 `oss-pulse`는 그 공개 전 체크를 한 번에 보는 작은 CLI입니다.
 
-npx --yes oss-pulse@0.1.4 scan . --format launch-post
+npx --yes oss-pulse@latest scan . --format launch-post
 
 보안 스캐너나 코드 품질 툴은 아니고, 외부 기여자가 들어오기 전에 필요한 maintainer surface를 점검합니다. GitHub Action, JSON, SARIF, GitHub annotations 출력도 지원합니다.
 
@@ -70,7 +70,7 @@ It checks the maintainer layer people expect before they open a PR: license, con
 
 It is intentionally not a code quality or security scanner. It is a preflight check for “does this repo look maintained enough for outside contributors?”
 
-npx --yes oss-pulse@0.1.4 scan . --format launch-post
+npx --yes oss-pulse@latest scan . --format launch-post
 
 Feedback from maintainers would be useful: what checks would you add or remove?
 ```
@@ -78,7 +78,7 @@ Feedback from maintainers would be useful: what checks would you add or remove?
 ## Screenshot command
 
 ```bash
-npx --yes oss-pulse@0.1.4 scan . --format launch-post
+npx --yes oss-pulse@latest scan . --format launch-post
 ```
 
 Capture the output with the score and top action visible. Avoid a busy terminal theme. The screenshot should make the product understandable in five seconds.

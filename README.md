@@ -3,7 +3,7 @@
 You vibe-coded a repo. Before you drop the GitHub link, run one command:
 
 ```bash
-npx --yes oss-pulse@0.1.4 scan . --format action-summary
+npx --yes oss-pulse@latest scan . --format action-summary
 ```
 
 `oss-pulse` checks whether your project looks ready for real outside contributors: license, contributing guide, issue templates, security policy, CI, changelog, release workflow, and clear next actions.
@@ -24,7 +24,7 @@ Status: needs-work
 ## Quick start
 
 ```bash
-npx --yes oss-pulse@0.1.4 scan . --format markdown
+npx --yes oss-pulse@latest scan . --format markdown
 ```
 
 Local development:
@@ -95,49 +95,49 @@ node dist/cli.js scan . --format markdown --fail-under 80
 Pull request summary gate:
 
 ```bash
-npx --yes oss-pulse@0.1.4 scan . --format markdown --summary-only --fail-under 80 >> "$GITHUB_STEP_SUMMARY"
+npx --yes oss-pulse@latest scan . --format markdown --summary-only --fail-under 80 >> "$GITHUB_STEP_SUMMARY"
 ```
 
 Release notes draft:
 
 ```bash
-npx --yes oss-pulse@0.1.4 scan . --format release-notes
+npx --yes oss-pulse@latest scan . --format release-notes
 ```
 
 Action-focused summary:
 
 ```bash
-npx --yes oss-pulse@0.1.4 scan . --format action-summary
+npx --yes oss-pulse@latest scan . --format action-summary
 ```
 
 Launch post draft:
 
 ```bash
-npx --yes oss-pulse@0.1.4 scan . --format launch-post
+npx --yes oss-pulse@latest scan . --format launch-post
 ```
 
 Contributor onboarding report:
 
 ```bash
-npx --yes oss-pulse@0.1.4 scan . --format contributor-onboarding
+npx --yes oss-pulse@latest scan . --format contributor-onboarding
 ```
 
 Issue and pull request triage:
 
 ```bash
-npx --yes oss-pulse@0.1.4 scan . --format triage-suggestions
+npx --yes oss-pulse@latest scan . --format triage-suggestions
 ```
 
 SARIF for code scanning:
 
 ```bash
-npx --yes oss-pulse@0.1.4 scan . --format sarif --output oss-pulse.sarif
+npx --yes oss-pulse@latest scan . --format sarif --output oss-pulse.sarif
 ```
 
 GitHub workflow annotations:
 
 ```bash
-npx --yes oss-pulse@0.1.4 scan . --format github-annotations
+npx --yes oss-pulse@latest scan . --format github-annotations
 ```
 
 ## GitHub Actions
@@ -156,13 +156,13 @@ jobs:
       - uses: actions/checkout@v5
         with:
           fetch-depth: 0
-      - run: npx --yes oss-pulse@0.1.4 scan . --format markdown --summary-only --fail-under 80 >> "$GITHUB_STEP_SUMMARY"
+      - run: npx --yes oss-pulse@latest scan . --format markdown --summary-only --fail-under 80 >> "$GITHUB_STEP_SUMMARY"
 ```
 
 Repository Action usage with a pinned release tag:
 
 ```yaml
-- uses: 2Eungk/oss-pulse@v0.1.4
+- uses: 2Eungk/oss-pulse@v0.1.5
   with:
     path: "."
     format: markdown

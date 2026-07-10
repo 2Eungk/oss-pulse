@@ -17,6 +17,7 @@ import {
 } from "./format.js"
 import { scanRepository } from "./git.js"
 import { formatGithubAnnotations } from "./github-annotations.js"
+import { getPackageVersion } from "./package-info.js"
 import { buildReport } from "./report.js"
 import { formatSarif } from "./sarif.js"
 import { OUTPUT_FORMATS } from "./types.js"
@@ -63,7 +64,7 @@ export async function main(argv: readonly string[]): Promise<void> {
   program
     .name("oss-pulse")
     .description("Turn repository maintenance signals into an actionable OSS health report.")
-    .version("0.1.0")
+    .version(getPackageVersion())
 
   program
     .command("scan")

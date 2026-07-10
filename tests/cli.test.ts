@@ -1,6 +1,6 @@
 import { strict as assert } from "node:assert"
 import { execFile } from "node:child_process"
-import { mkdir, mkdtemp, realpath, writeFile } from "node:fs/promises"
+import { mkdir, mkdtemp, readFile, realpath, writeFile } from "node:fs/promises"
 import { tmpdir } from "node:os"
 import { dirname, join, resolve } from "node:path"
 import { test } from "node:test"
@@ -8,6 +8,18 @@ import { fileURLToPath } from "node:url"
 import { promisify } from "node:util"
 
 const execFileAsync = promisify(execFile)
+
+test("CLI --version matches package.json", async () => {
+  // Given: the package version is the source of truth for publish/install UX.
+  const packageJson = JSON.parse(await readFile(resolve(projectRoot(), "package.json"), "utf8"))
+
+  // When: the compiled CLI prints its version.
+  const result = await execFileAsync(process.execPath, [cliPath(), "--version"])
+
+  // Then: users and npm smoke tests see the same version that will be packed.
+  assert.equal(result.stdout.trim(), packageJson.version)
+  assert.equal(result.stderr, "")
+})
 
 test("CLI emits JSON pulse when scanning a real git repository", async () => {
   // Given: a real git repository with a README, license, and CI workflow.
@@ -288,6 +300,11 @@ async function captureFailureWithCwd(
 function cliPath(): string {
   const currentFile = fileURLToPath(import.meta.url)
   return resolve(dirname(currentFile), "../src/cli.js")
+}
+
+function projectRoot(): string {
+  const currentFile = fileURLToPath(import.meta.url)
+  return resolve(dirname(currentFile), "../../..")
 }
 
 function isExecFailure(error: unknown): error is {

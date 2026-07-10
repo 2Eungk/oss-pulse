@@ -1,5 +1,6 @@
 import { pathToFileURL } from "node:url"
 import { artifactUriForAction } from "./action-artifacts.js"
+import { getPackageVersion } from "./package-info.js"
 import type { ActionId, PulseAction, PulseReport } from "./types.js"
 
 type SarifLevel = "error" | "warning" | "note"
@@ -68,7 +69,7 @@ export function formatSarif(report: PulseReport): string {
           driver: {
             name: "oss-pulse",
             rules: report.actions.map(formatRule),
-            semanticVersion: "0.1.0",
+            semanticVersion: getPackageVersion(),
           },
         },
       },
