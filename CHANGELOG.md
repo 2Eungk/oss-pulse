@@ -8,6 +8,7 @@
 - Rejected configuration-only issue-template directories and added controlled output-file errors.
 - Renamed contributor activity copy so distinct git authors are not misreported as verified external contributors.
 - Fixed the composite Action example to check out the target repository and pin an existing release tag.
+- Added least-privilege CodeQL analysis and pinned workflow Actions to immutable commit SHAs.
 
 ## 0.1.5 - 2026-07-09
 
