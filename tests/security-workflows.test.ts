@@ -6,7 +6,7 @@ import { fileURLToPath } from "node:url"
 
 const CHECKOUT_SHA = "93cb6efe18208431cddfb8368fd83d5badbf9bfd"
 const SETUP_NODE_SHA = "a0853c24544627f65ddf259abe73b1d18a591444"
-const CODEQL_SHA = "02c5e83432fe5497fd85b873b6c9f16a8578e1d9"
+const CODEQL_SHA = "99df26d4f13ea111d4ec1a7dddef6063f76b97e9"
 
 test("workflows pin third-party Actions to immutable commit SHAs", async () => {
   const workflows = await Promise.all([
