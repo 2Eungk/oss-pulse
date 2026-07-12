@@ -3,97 +3,108 @@
 This project publishes two surfaces:
 
 - npm package: `oss-pulse`
-- GitHub composite Action: pinned repository tags such as `v0.1.3`
+- GitHub composite Action: immutable commits referenced by annotated release tags such as `v0.1.5`
 
-The default release path is intentionally manual until a maintainer configures a publish token. Manual publishing keeps first releases simple and avoids requiring secrets before the project needs automation.
+The automated workflow is intentionally manual (`workflow_dispatch`) and publishes only from `main`. It requires an npm trusted-publishing setup or an `NPM_TOKEN`; it never creates tags or GitHub Releases.
 
 ## Prerequisites
 
-- npm package name is available or owned by the maintainer.
-- The maintainer is logged in with the npm CLI:
+- The npm package name is available or owned by the maintainer.
+- The maintainer is logged in with the npm CLI for a manual release:
 
   ```bash
   npm whoami
   ```
 
 - npm two-factor authentication is available for publish OTP prompts.
-- The release branch passes `npm run check`.
-- Optional automation path only: GitHub repository has `NPM_TOKEN` configured as an Actions secret.
+- The release commit is on `main`, clean, reviewed, and passes `npm run check`.
+- `package.json` contains the exact strict SemVer release version and `CHANGELOG.md` has a matching version heading. Keep candidate changes under `## Unreleased` until this promotion step.
 
-## Local Preflight
+## Local preflight
+
+From the repository root, replace `X.Y.Z` with the intended version.
 
 ```bash
-npm ci
+npm ci --ignore-scripts
 npm run check
 npm run build
-npm pack --dry-run
+npm pack --dry-run --json
 git diff --check
+git diff --exit-code
 ```
 
-Confirm the dry-run includes `dist`, `README.md`, `CHANGELOG.md`, `LICENSE`, `action.yml`, and `package.json`.
+`npm pack --dry-run --json` only reports the prospective package contents; it does **not** create a tarball. Confirm it includes `dist`, `README.md`, `CHANGELOG.md`, `LICENSE`, `action.yml`, `docs/REPORT_SCHEMA.md`, `docs/report.schema.json`, and `package.json`, while excluding internal plans, playbooks, backlog, roadmap, and example documents.
 
-For CLI packages, also verify the installed bin path from a clean temporary directory before treating a release as done. This catches bugs where `node dist/cli.js` works but `npx oss-pulse` does not.
+Create the actual tarball only after the dry run passes. The JSON output supplies the tarball path. Install it into an isolated directory and exercise the packaged bin before publishing:
 
 ```bash
+REPO_ROOT=$(git rev-parse --show-toplevel)
+TARBALL=$(npm pack --json | node -e 'let data=""; process.stdin.on("data", (chunk) => data += chunk); process.stdin.on("end", () => process.stdout.write(JSON.parse(data)[0].filename))')
 TMPDIR=$(mktemp -d)
+trap 'rm -rf "$TMPDIR" "$REPO_ROOT/$TARBALL"' EXIT
 cd "$TMPDIR"
-npm install /path/to/oss-pulse/oss-pulse-X.Y.Z.tgz
-node_modules/.bin/oss-pulse scan /path/to/repo --format markdown --summary-only
+npm install "$REPO_ROOT/$TARBALL"
+node_modules/.bin/oss-pulse scan "$REPO_ROOT" --format markdown --summary-only
+cd "$REPO_ROOT"
 ```
 
-## Manual npm Publish With OTP
+## Manual npm publish with OTP
 
-Use this path when `NPM_TOKEN` is not configured.
+Use this path when no trusted-publishing workflow is configured.
 
-1. Update `CHANGELOG.md`.
-2. Update `package.json` version.
-3. Run the local preflight.
-4. Commit and push the release change.
+1. Promote the intended changes from `## Unreleased` to `## X.Y.Z - YYYY-MM-DD` in `CHANGELOG.md`, and set `package.json` to exactly `X.Y.Z`.
+2. Commit and push that release commit to `main`; do not release an uncommitted working tree.
+3. Run the local preflight and the clean tarball install above from that exact commit.
+4. Record the verified commit before publishing:
+
+   ```bash
+   RELEASE_COMMIT=$(git rev-parse HEAD)
+   ```
+
 5. Publish from the repository root:
 
    ```bash
    npm publish --access public
    ```
 
-6. When npm asks for the one-time password, enter the current 2FA code.
-7. Verify the registry has the expected version:
+   Enter the current npm OTP when prompted.
+
+6. Verify the registry version and execute the registry package, rather than local files:
 
    ```bash
    npm view oss-pulse version dist-tags.latest
-   ```
-
-8. Verify the published package through the registry, not local files:
-
-   ```bash
    TMPDIR=$(mktemp -d)
-   cd "$TMPDIR"
-   npx --yes oss-pulse@X.Y.Z scan /path/to/repo --format markdown --summary-only
+   (
+     cd "$TMPDIR"
+     npx --yes oss-pulse@X.Y.Z scan /path/to/repo --format markdown --summary-only
+   )
+   rm -rf "$TMPDIR"
    ```
 
-9. Create the GitHub Release only after npm and `npx` verification pass:
+7. Only after registry and `npx` verification pass, confirm the checked-out commit is still the verified one, create an immutable annotated tag at that commit, and push it:
 
    ```bash
-   gh release create vX.Y.Z --target main --title "oss-pulse vX.Y.Z" --notes-file /path/to/notes.md
+   test "$(git rev-parse HEAD)" = "$RELEASE_COMMIT"
+   git tag -a "vX.Y.Z" "$RELEASE_COMMIT" -m "oss-pulse vX.Y.Z"
+   git push origin "vX.Y.Z"
    ```
 
-10. Confirm CI on `main` is green.
+8. Create the GitHub Release from the already-pushed tag. `--verify-tag` prevents `gh` from silently creating a tag at another commit:
 
-## Automated Publish Path
+   ```bash
+   gh release create "vX.Y.Z" --verify-tag --title "oss-pulse vX.Y.Z" --notes-file /path/to/notes.md
+   ```
 
-The repository includes a manual-only release workflow. Keep it manual until `NPM_TOKEN` exists and a maintainer has tested the workflow on a patch release.
+## Automated publish path
 
-When automation is ready:
+The `Release` workflow is manual-only and accepts a required `version` input. It runs only when dispatched from `refs/heads/main`, rejects non-SemVer input, mismatched `package.json` versions, absent changelog headings, and versions already in npm. It then uses `npm ci --ignore-scripts`, runs check/build/package gates, and publishes with npm provenance.
 
-1. Create an npm granular access token with publish permissions and 2FA bypass enabled.
-2. Add it to GitHub Actions secrets as `NPM_TOKEN`.
-3. Run the `Release` workflow manually for a patch version.
-4. Verify npm registry, `npx`, GitHub release notes, and CI.
-5. Only then consider adding release-triggered publish automation.
+The workflow deliberately does not tag commits or create GitHub Releases. After its npm and `npx` verification, use the immutable-tag and `gh release create --verify-tag` steps above from the verified release commit.
 
-## After Publish
+## After publish
 
-- Run `npx --yes oss-pulse@X.Y.Z scan . --format markdown`.
 - Check `npm view oss-pulse version dist-tags.latest`.
+- Run `npx --yes oss-pulse@X.Y.Z scan . --format markdown` from a clean directory.
+- Confirm the immutable annotated tag resolves to the verified release commit.
 - Check the latest GitHub Actions CI run.
-- Create or update the GitHub Release for `vX.Y.Z`.
 - Add one real scan example to the README or `docs/examples/` when the release changes user-visible behavior.

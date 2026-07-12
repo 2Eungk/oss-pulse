@@ -16,8 +16,10 @@ export class GitCommandError extends Error {
     readonly command: readonly string[],
     readonly cwd: string,
     readonly stderr: string,
+    readonly code: string | undefined,
+    cause: unknown,
   ) {
-    super(`git ${command.join(" ")} failed in ${cwd}`)
+    super(`git ${command.join(" ")} failed in ${cwd}`, { cause })
   }
 }
 

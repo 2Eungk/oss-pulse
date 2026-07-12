@@ -52,7 +52,8 @@ test("CLI emits SARIF when sarif format is selected", async () => {
     "--format",
     "sarif",
   ])
-  const sarif = SarifSchema.parse(JSON.parse(result.stdout))
+  const parsed = JSON.parse(result.stdout)
+  const sarif = SarifSchema.parse(parsed)
   const [run] = sarif.runs
   assert.ok(run)
 
@@ -67,6 +68,15 @@ test("CLI emits SARIF when sarif format is selected", async () => {
     true,
   )
   assert.equal(result.stderr, "")
+
+  // SARIF is commonly uploaded outside the machine that generated it. Artifact
+  // locations must stay useful without disclosing the scanner's filesystem.
+  const serialized = JSON.stringify(parsed)
+  assert.equal(serialized.includes(repositoryRoot), false)
+  assert.equal(serialized.includes("file:"), false)
+  assert.equal(serialized.includes("%SRCROOT%"), false)
+  assert.equal(serialized.includes("originalUriBaseIds"), false)
+  assert.equal(serialized.includes("uriBaseId"), false)
 })
 
 async function createSparseRepository(): Promise<string> {

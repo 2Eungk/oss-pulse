@@ -10,6 +10,8 @@ For code scanning consumers, `oss-pulse scan --format sarif` emits a SARIF 2.1.0
 
 For GitHub Actions consumers, `oss-pulse scan --format github-annotations` emits workflow commands where high-priority actions become errors, medium-priority actions become warnings, and low-priority actions become notices.
 
+`ci-workflow` and `release-workflow` are supported locally verifiable heuristics. They require a parseable local workflow with a recognized GitHub event, a runnable non-disabled job, and a bounded supported command or release action pattern. Dynamic/complex shell and remote reusable workflows receive no behavioral credit; the scanner does not interpret or search embedded shell text. Local `workflow_call` files are eligible only through their independently verifiable contents.
+
 ## Top-Level Object
 
 | Field | Type | Description |
@@ -52,6 +54,8 @@ For GitHub Actions consumers, `oss-pulse scan --format github-annotations` emits
 | `external-contributors` | 5 |
 | `code-of-conduct` | 5 |
 | `recent-activity` | 5 |
+
+`external-contributors` is a historical machine-readable identifier. Its displayed signal counts author entries as interpreted by `git shortlog` in the last 90 days; Git's `.mailmap` may apply. This does not establish unique people or external contributors.
 
 ## PulseAction
 

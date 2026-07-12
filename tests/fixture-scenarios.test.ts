@@ -33,7 +33,7 @@ const CONTRIBUTOR: GitAuthor = {
 }
 
 test("fixture scenario reports ready when a repository has every maintained surface", async () => {
-  // Given: a complete repository fixture with release, funding, and two contributors.
+  // Given: a complete repository fixture with release, funding, and two Git author identities.
   const repositoryRoot = await createCompleteRepository()
 
   // When: the CLI scans the fixture as JSON.
@@ -132,8 +132,16 @@ async function createCompleteRepository(): Promise<string> {
     "name: Good first issue\nlabels: good first issue\n",
   )
   await writeRepoFile(repositoryRoot, ".github/PULL_REQUEST_TEMPLATE.md", "## Summary\n")
-  await writeRepoFile(repositoryRoot, ".github/workflows/ci.yml", "name: CI\n")
-  await writeRepoFile(repositoryRoot, ".github/workflows/release.yml", "name: Release\n")
+  await writeRepoFile(
+    repositoryRoot,
+    ".github/workflows/ci.yml",
+    "name: CI\non: push\njobs:\n  test:\n    runs-on: ubuntu-latest\n    steps:\n      - run: npm test\n",
+  )
+  await writeRepoFile(
+    repositoryRoot,
+    ".github/workflows/release.yml",
+    "name: Release\non: push\njobs:\n  publish:\n    runs-on: ubuntu-latest\n    steps:\n      - run: npm publish --dry-run\n",
+  )
   await commitAll(repositoryRoot, "Add maintainer surfaces", MAINTAINER)
 
   await writeRepoFile(repositoryRoot, "docs/contributor-note.md", "Thanks\n")

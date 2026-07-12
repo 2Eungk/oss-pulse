@@ -18,7 +18,7 @@ Status: needs-work
 
 ## Top Actions
 
-1. **Grow contributor activity** (medium) - Create starter issues and invite more contributors into small, reviewable work.
+1. **Invite contributors** (medium) - Create starter issues and invite contributors into small, reviewable work.
 ```
 
 ## Quick start
@@ -82,6 +82,12 @@ The report includes:
 - GitHub workflow annotations for visible CI warnings and errors
 - optional CI failure when score is below `--fail-under`
 - compact Markdown output with `--summary-only`
+
+The activity check counts author entries as interpreted by `git shortlog` during the last 90 days. Git's `.mailmap` may apply. This does not establish unique people or external contributors.
+
+## Workflow readiness heuristic
+
+CI and release readiness are **supported locally verifiable heuristics**, not a GitHub Actions interpreter. oss-pulse parses local `.github/workflows/*.yml` files with YAML 2.x and recognizes only known GitHub events, minimally valid trigger shapes, runnable jobs, and a bounded set of plain command/action patterns. Complex or dynamic shell (`if`, pipes, redirects, command substitution, `bash -c`, `eval`, variables, and similar constructs) receives no behavioral credit; oss-pulse never searches embedded text for commands. Conditions receive credit only when absent or the YAML boolean literal `true`; static false values, expressions, and other strings are unverified. Remote reusable workflows also receive no credit. A local reusable workflow may count only when its own `workflow_call` file exists under `.github/workflows` and independently contains a supported runnable behavior.
 
 ## Examples
 
@@ -153,19 +159,19 @@ jobs:
   pulse:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v5
+      - uses: actions/checkout@93cb6efe18208431cddfb8368fd83d5badbf9bfd # v5
         with:
           fetch-depth: 0
       - run: npx --yes oss-pulse@latest scan . --format markdown --summary-only --fail-under 80 >> "$GITHUB_STEP_SUMMARY"
 ```
 
-Repository Action usage with a pinned release tag (checkout is required before scanning):
+Repository Action usage with immutable commit pins (checkout is required before scanning):
 
 ```yaml
-- uses: actions/checkout@v5
+- uses: actions/checkout@93cb6efe18208431cddfb8368fd83d5badbf9bfd # v5
   with:
     fetch-depth: 0
-- uses: 2Eungk/oss-pulse@v0.1.4
+- uses: 2Eungk/oss-pulse@2a896480d335697a77bb27c48298878d4dfb638e # v0.1.4
   with:
     path: "."
     format: markdown
@@ -182,7 +188,7 @@ Action inputs:
 | `fail-under` | `0` | Exit 1 when the score is below this threshold. |
 | `summary-only` | `false` | Emit compact Markdown with score and next actions. |
 
-Prefer a pinned release tag for the repository Action instead of a branch name.
+Prefer an immutable commit SHA (with its release version in a comment) for the repository Action instead of a mutable tag or branch name.
 
 When `format` is `github-annotations`, the Action prints workflow commands to stdout so GitHub can render annotations in the checks UI.
 

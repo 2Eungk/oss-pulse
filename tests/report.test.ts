@@ -28,7 +28,7 @@ const healthySignals: RepositorySignals = {
 }
 
 test("buildReport returns a complete pulse when every maintainer signal is present", () => {
-  // Given: a repository with the core files, recent activity, and multiple contributors.
+  // Given: a repository with the core files, recent activity, and multiple Git author identities.
   const signals = healthySignals
 
   // When: the report is built.
@@ -88,11 +88,11 @@ test("buildReport prioritizes missing maintainer surfaces when repository hygien
   assert.equal(report.status, "needs-work")
   assert.equal(
     report.checks.find((check) => check.id === "external-contributors")?.label,
-    "Distinct contributor activity",
+    "Distinct Git author identities",
   )
   assert.equal(
     report.actions.find((action) => action.id === "invite-contributors")?.title,
-    "Grow contributor activity",
+    "Invite contributors",
   )
 })
 

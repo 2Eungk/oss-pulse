@@ -1,4 +1,3 @@
-import { pathToFileURL } from "node:url"
 import { artifactUriForAction } from "./action-artifacts.js"
 import { getPackageVersion } from "./package-info.js"
 import type { ActionId, PulseAction, PulseReport } from "./types.js"
@@ -11,7 +10,6 @@ type SarifMessage = {
 
 type SarifArtifactLocation = {
   readonly uri: string
-  readonly uriBaseId?: string
 }
 
 type SarifResult = {
@@ -37,7 +35,6 @@ type SarifRule = {
 }
 
 type SarifRun = {
-  readonly originalUriBaseIds: Record<string, SarifArtifactLocation>
   readonly results: readonly SarifResult[]
   readonly tool: {
     readonly driver: {
@@ -54,16 +51,11 @@ type SarifLog = {
   readonly version: "2.1.0"
 }
 
-const SOURCE_ROOT_URI_BASE_ID = "%SRCROOT%"
-
 export function formatSarif(report: PulseReport): string {
   const log: SarifLog = {
     $schema: "https://json.schemastore.org/sarif-2.1.0.json",
     runs: [
       {
-        originalUriBaseIds: {
-          [SOURCE_ROOT_URI_BASE_ID]: { uri: rootUri(report.root) },
-        },
         results: report.actions.map(formatResult),
         tool: {
           driver: {
@@ -98,7 +90,6 @@ function formatResult(action: PulseAction): SarifResult {
         physicalLocation: {
           artifactLocation: {
             uri: artifactUriForAction(action.id),
-            uriBaseId: SOURCE_ROOT_URI_BASE_ID,
           },
           region: {
             startLine: 1,
@@ -122,11 +113,6 @@ function sarifLevel(priority: PulseAction["priority"]): SarifLevel {
     default:
       return assertNever(priority)
   }
-}
-
-function rootUri(root: string): string {
-  const uri = pathToFileURL(root).href
-  return uri.endsWith("/") ? uri : `${uri}/`
 }
 
 function assertNever(value: never): never {

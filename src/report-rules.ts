@@ -11,7 +11,8 @@ type CheckRule = {
 
 const ACTIONS: Record<ActionId, PulseAction> = {
   "add-ci-workflow": {
-    detail: "Add a minimal CI workflow so contributors can trust the project gate.",
+    detail:
+      "Add a locally verifiable CI workflow using a supported plain test, lint, build, check, or typecheck command.",
     id: "add-ci-workflow",
     priority: "medium",
     title: "Add CI workflow",
@@ -77,7 +78,8 @@ const ACTIONS: Record<ActionId, PulseAction> = {
     title: "Add README",
   },
   "add-release-workflow": {
-    detail: "Add a release or publish workflow so tagged releases are repeatable.",
+    detail:
+      "Add a locally verifiable release workflow using a supported plain publish, release-create, semantic-release, or release action pattern.",
     id: "add-release-workflow",
     priority: "medium",
     title: "Add release workflow",
@@ -89,10 +91,10 @@ const ACTIONS: Record<ActionId, PulseAction> = {
     title: "Add SECURITY policy",
   },
   "invite-contributors": {
-    detail: "Create starter issues and invite more contributors into small, reviewable work.",
+    detail: "Create starter issues and invite contributors into small, reviewable work.",
     id: "invite-contributors",
     priority: "medium",
-    title: "Grow contributor activity",
+    title: "Invite contributors",
   },
   "resume-maintenance": {
     detail: "Land a small maintenance commit so visitors can see active stewardship.",
@@ -172,8 +174,8 @@ export const CHECK_RULES: readonly CheckRule[] = [
     action: ACTIONS["add-ci-workflow"],
     detail: (signals) =>
       signals.files.workflowCount > 0
-        ? `${signals.files.workflowCount} workflow file(s) found`
-        : "No workflow files found",
+        ? `${signals.files.workflowCount} locally verifiable CI workflow(s) found`
+        : "No locally verifiable CI workflow found",
     id: "ci-workflow",
     label: "CI workflow",
     passed: (signals) => signals.files.workflowCount > 0,
@@ -182,7 +184,9 @@ export const CHECK_RULES: readonly CheckRule[] = [
   {
     action: ACTIONS["add-release-workflow"],
     detail: (signals) =>
-      signals.files.releaseWorkflow ? "Release workflow found" : "No release workflow",
+      signals.files.releaseWorkflow
+        ? "Locally verifiable release workflow found"
+        : "No locally verifiable release workflow found",
     id: "release-workflow",
     label: "Release workflow",
     passed: (signals) => signals.files.releaseWorkflow,
@@ -214,9 +218,10 @@ export const CHECK_RULES: readonly CheckRule[] = [
   },
   {
     action: ACTIONS["invite-contributors"],
-    detail: (signals) => `${signals.contributorsLast90Days} contributor(s) in the last 90 days`,
+    detail: (signals) =>
+      `${signals.contributorsLast90Days} distinct Git author identity/identities in the last 90 days`,
     id: "external-contributors",
-    label: "Distinct contributor activity",
+    label: "Distinct Git author identities",
     passed: (signals) => signals.contributorsLast90Days >= 2,
     points: 5,
   },

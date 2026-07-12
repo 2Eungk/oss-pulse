@@ -34,7 +34,7 @@ test("CLI emits a vibe-coder launch post with command and next actions", async (
   assert.match(result.stdout, /- README/)
   assert.match(result.stdout, /- License/)
   assert.match(result.stdout, /## Still tightening/)
-  assert.match(result.stdout, /Grow contributor activity/)
+  assert.match(result.stdout, /Invite contributors/)
   assert.match(result.stdout, /Feedback welcome from maintainers/)
   assert.doesNotMatch(result.stdout, /## Checks/)
   assert.equal(result.stderr, "")
@@ -70,10 +70,14 @@ async function createLaunchReadyRepository(): Promise<string> {
     "---\nname: Good first issue\n---\n",
     "utf8",
   )
-  await writeFile(join(repositoryRoot, ".github", "workflows", "ci.yml"), "name: CI\n", "utf8")
+  await writeFile(
+    join(repositoryRoot, ".github", "workflows", "ci.yml"),
+    "name: CI\non: push\njobs:\n  test:\n    runs-on: ubuntu-latest\n    steps:\n      - run: npm test\n",
+    "utf8",
+  )
   await writeFile(
     join(repositoryRoot, ".github", "workflows", "release.yml"),
-    "name: Release\n",
+    "name: Release\non: push\njobs:\n  publish:\n    runs-on: ubuntu-latest\n    steps:\n      - run: npm publish --dry-run\n",
     "utf8",
   )
   await git(repositoryRoot, ["add", "."])

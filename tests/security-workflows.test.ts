@@ -23,12 +23,11 @@ test("workflows pin third-party Actions to immutable commit SHAs", async () => {
   assert.doesNotMatch(combined, /uses:\s+[^\s]+@v\d+(?:\s|$)/)
 })
 
-test("CodeQL uses least privilege and analyzes JavaScript/TypeScript", async () => {
+test("CodeQL uses exactly the permissions required for analysis and SARIF upload", async () => {
   const workflow = await readWorkflow("codeql.yml")
 
-  assert.match(workflow, /contents: read/)
-  assert.match(workflow, /security-events: write/)
-  assert.match(workflow, /packages: read/)
+  const permissions = workflow.match(/permissions:\n((?: {2}[^\n]+\n)+)\n/)?.[1]
+  assert.equal(permissions, "  contents: read\n  security-events: write\n")
   assert.match(workflow, /languages: javascript-typescript/)
 })
 

@@ -6,14 +6,15 @@
 - Updated paste-ready README and launch-copy examples to use `oss-pulse@latest`.
 - Ranked remediation actions by priority while preserving rule order within each priority.
 - Rejected configuration-only issue-template directories and added controlled output-file errors.
-- Renamed contributor activity copy so distinct git authors are not misreported as verified external contributors.
+- Parse GitHub Actions YAML and inspect runnable jobs, so malformed, empty, commented, or unrelated workflows do not satisfy CI or release checks.
+- Report inaccessible repository paths as concise command errors instead of exposing filesystem error stacks.
+- Clarified contributor activity as `git shortlog` author entries that may use `.mailmap`, not unique people or external contributors.
 - Fixed the composite Action example to check out the target repository and pin an existing release tag.
 - Added least-privilege CodeQL analysis and pinned workflow Actions to immutable commit SHAs.
-
-## 0.1.5 - 2026-07-09
-
 - Added `--format launch-post` for paste-ready vibe-coder launch posts.
 - Sharpened README and launch-copy docs around the vibe-coder preflight use case.
+- Kept SARIF artifact locations repository-relative and removed scanner filesystem URI metadata.
+- Hardened Action installation, package contents, release validation, provenance publishing, and immutable Action examples.
 
 ## 0.1.0 - 2026-07-08
 

@@ -2,6 +2,11 @@ name: Release
 
 on:
   workflow_dispatch:
+    inputs:
+      version:
+        description: Exact semantic version to publish (for example, 0.1.5).
+        required: true
+        type: string
 
 permissions:
   contents: read
@@ -9,7 +14,10 @@ permissions:
 
 jobs:
   publish:
+    if: github.ref == 'refs/heads/main'
     runs-on: ubuntu-latest
+    env:
+      RELEASE_VERSION: ${{ inputs.version }}
     steps:
       - uses: actions/checkout@93cb6efe18208431cddfb8368fd83d5badbf9bfd # v5
       - uses: actions/setup-node@a0853c24544627f65ddf259abe73b1d18a591444 # v5
@@ -17,9 +25,37 @@ jobs:
           node-version: "22"
           registry-url: "https://registry.npmjs.org"
           cache: npm
-      - run: npm ci
+      - name: Validate requested version and changelog
+        shell: bash
+        run: |
+          set -euo pipefail
+          semver='^(0|[1-9][0-9]*)\.(0|[1-9][0-9]*)\.(0|[1-9][0-9]*)(-((0|[1-9][0-9]*)|[0-9A-Za-z-]*[A-Za-z-][0-9A-Za-z-]*)(\.((0|[1-9][0-9]*)|[0-9A-Za-z-]*[A-Za-z-][0-9A-Za-z-]*))*)?(\+[0-9A-Za-z-]+(\.[0-9A-Za-z-]+)*)?$'
+          if ! [[ "$RELEASE_VERSION" =~ $semver ]]; then
+            echo "version must be strict SemVer: $RELEASE_VERSION" >&2
+            exit 1
+          fi
+          package_version="$(node --input-type=module -e 'import pkg from "./package.json" with { type: "json" }; process.stdout.write(pkg.version)')"
+          if [ "$package_version" != "$RELEASE_VERSION" ]; then
+            echo "package.json version ($package_version) does not match requested version ($RELEASE_VERSION)" >&2
+            exit 1
+          fi
+          if ! grep -Eq "^## \[?${RELEASE_VERSION//./\\.}\]?( - |$)" CHANGELOG.md; then
+            echo "CHANGELOG.md must contain a heading for $RELEASE_VERSION before publishing" >&2
+            exit 1
+          fi
+      - name: Reject an already-published version
+        shell: bash
+        run: |
+          set -euo pipefail
+          if npm view "oss-pulse@$RELEASE_VERSION" version --json >/dev/null 2>&1; then
+            echo "oss-pulse@$RELEASE_VERSION is already published" >&2
+            exit 1
+          fi
+      - run: npm ci --ignore-scripts
       - run: npm run check
       - run: npm run build
+      - name: Verify package contents
+        run: npm pack --dry-run --json
       - run: npm publish --provenance --access public
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}

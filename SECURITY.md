@@ -2,7 +2,9 @@
 
 Please do not open public issues for vulnerabilities.
 
-Email the maintainers with:
+Report vulnerabilities privately through [GitHub Private Vulnerability Reporting](https://github.com/2Eungk/oss-pulse/security/advisories/new). Do not include sensitive details in a public issue.
+
+Include:
 
 - affected version or commit
 - reproduction steps
